@@ -1,7 +1,15 @@
 package com.wildcodeschool.wildandwizard.repository;
 
 import com.wildcodeschool.wildandwizard.entity.School;
+import com.wildcodeschool.wildandwizard.entity.Wizard;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SchoolRepository {
@@ -11,20 +19,87 @@ public class SchoolRepository {
     private final static String DB_PASSWORD = "Horcrux4life!";
 
     public List<School> findAll() {
+    	
+
+    	        try {
+    	            Connection connection = DriverManager.getConnection(
+    	                    DB_URL, DB_USER, DB_PASSWORD
+    	            );
+    	            PreparedStatement statement = connection.prepareStatement(
+    	                    "SELECT * FROM School;"
+    	            );
+    	            ResultSet resultSet = statement.executeQuery();
+
+    	            List<School> School = new ArrayList<>();
+
+    	            while (resultSet.next()) {
+    	                Long id = resultSet.getLong("id");
+    	                String name = resultSet.getString("name");
+    	                Long capacity = resultSet.getLong("capacity");
+    	                String country = resultSet.getString("country");
+    	                School.add(new School (id, name, capacity, country));
+    	            }
+    	            return School;
+    	        } catch (SQLException e) {
+    	            e.printStackTrace();
+    	        }
+    		}
+    	       
+    	        public School findById(Long id) {
+
+    	            try {
+    	                Connection connection = DriverManager.getConnection(
+    	                        DB_URL, DB_USER, DB_PASSWORD
+    	                );
+    	                PreparedStatement statement = connection.prepareStatement(
+    	                        "SELECT * FROM school WHERE id = ?;"
+    	                );
+    	                statement.setLong(1, id);
+    	                ResultSet resultSet = statement.executeQuery();
+
+    	                if (resultSet.next()) {
+    	                    id = resultSet.getLong("id");
+    	                    String name = resultSet.getString("name");
+    	                    Long capacity = resultSet.getLong("capacity");
+    	                    String country = resultSet.getString("country");
+    	                   
+    	                    return new School(id, name, capacity, country);
+    	                }
+    	            } catch (SQLException e) {
+    	                e.printStackTrace();
+    	            }
+    	           return null;
+    	        }
 
         // TODO : find all schools
-        return null;
-    }
+      
+    
 
-    public School findById(Long id) {
 
-        // TODO : find a school by id
-        return null;
-    }
+    public School findByCountry(String country) {
 
-    public List<School> findByCountry(String country) {
+	            try {
+	                Connection connection = DriverManager.getConnection(
+	                        DB_URL, DB_USER, DB_PASSWORD
+	                );
+	                PreparedStatement statement = connection.prepareStatement(
+	                        "SELECT * FROM school WHERE country = ?;"
+	                );
+	                statement.setString(1, country);
+	                ResultSet resultSet = statement.executeQuery();
 
-        // TODO : search schools by country
-        return null;
+	                if (resultSet.next()) {
+	                    Long id = resultSet.getLong("id");
+	                    String name = resultSet.getString("name");
+	                    Long capacity = resultSet.getLong("capacity");
+	                    country = resultSet.getString("country");
+	                   
+	                    return new School(id, name, capacity, country);
+	                }
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	           return null;
     }
 }
+	        
