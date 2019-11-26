@@ -43,6 +43,7 @@ public class SchoolRepository {
     	        } catch (SQLException e) {
     	            e.printStackTrace();
     	        }
+				return null;
     		}
     	       
     	        public School findById(Long id) {
